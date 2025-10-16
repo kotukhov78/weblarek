@@ -94,7 +94,6 @@ export type TOrder = {
     address: string;
     total: number;
     items: string[]; // массив id товаров
-    id?: string;
 }
 ```
 
@@ -183,10 +182,6 @@ export type TOrder = {
 
 Методы класса:
 `setData(data: Partial<IBuyer>): void` - общий метод сохранения (обновления) данных о покупателе.
-`setPayment(payment: TPayment): void` - метод сохранения только способа оплаты.
-`setEmail(email: string): void` - метод сохранения только электронной почты покупателя.
-`setPhone(phone: string): void` - метод сохранения только телефона покупателя.
-`setAddress(address: string): void` - метод сохранения только адреса покупателя.
 `getData(): Partial<IBuyer>` - получение всех данных покупателя.
 `clearData(): void` - очистка всех данных покупателя.
 `validate(): { isValid: boolean; errors: IValidationErrors }` - валидация (проверка) данных о покупателе с выдачей информации об ошибке.

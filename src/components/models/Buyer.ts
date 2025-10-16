@@ -1,4 +1,4 @@
-import { IBuyer, IValidationErrors, TPayment } from "../../types";
+import { IBuyer, IValidationErrors } from "../../types";
 
 export class Buyer {
     private data: Partial<IBuyer> = {};
@@ -6,26 +6,6 @@ export class Buyer {
     // Сохранение данных покупателя (общий метод)
     setData(data: Partial<IBuyer>): void {
         this.data = { ...this.data, ...data };
-    }
-
-    // Сохранение только способа оплаты
-    setPayment(payment: TPayment): void {
-        this.data.payment = payment;
-    }
-
-    // Сохранение только email
-    setEmail(email: string): void {
-        this.data.email = email;
-    }
-
-    // Сохранение только телефона
-    setPhone(phone: string): void {
-        this.data.phone = phone;
-    }
-
-    // Сохранение только адреса
-    setAddress(address: string): void {
-        this.data.address = address;
     }
 
     // Получение всех данных покупателя

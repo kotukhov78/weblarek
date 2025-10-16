@@ -89,11 +89,6 @@ buyerTest.setData({
 });
 console.log('Состояние данных покупателя после сохранения эл.почты и способа оплаты: ', buyerTest.getData());
 
-// Тестирование методов setPhone и setAddress
-buyerTest.setPhone('+7 (908) 642-78-02');
-buyerTest.setAddress('Москва, ул. Строителей, д. 58');
-console.log('Состояние данных после добавления телефона и адреса: ', buyerTest.getData());
-
 buyerTest.setData({
     email: ''
 });
@@ -125,25 +120,32 @@ console.log('после очистки всех данных: ', buyerTest.getDa
 const api = new Api(API_URL);
 const apiClient = new ApiClient(api);
 const catalog = new ProductCatalog();
-console.log('1. Запрашиваем список товаров с сервера...');
-const products: IProduct[] = await apiClient.getProductList();
-console.log('2. Сохраняем товары в модель каталога...');
-catalog.setProducts(products);
-console.log('3. Проверяем сохраненные данные:');
-const savedProducts = catalog.getProducts();
-console.log('Количество товаров в каталоге:', savedProducts.length);
-console.log('Товары в каталоге:', savedProducts);
 
-// Тестирование метода getProductById
-console.log('4. Тестируем методы каталога с реальными данными:');
-if (savedProducts.length > 0) {
-    const firstProduct = savedProducts[0];
-    console.log('Первый товар:', firstProduct);
-// Тестируем получение товара по ID
-    const productByIdApi = catalog.getProductById(firstProduct.id);
-    console.log('Товар по ID:', productByIdApi);
-// Тестируем работу с выбранным товаром
-    catalog.setSelectedProduct(firstProduct);
-    console.log('Выбранный товар:', catalog.getSelectedProduct());
-}
+console.log('1. Запрашиваем список товаров с сервера...');
+let products: IProduct[] = [];
+apiClient.getProductList()
+    .then((data: IProduct[]) => {
+        products = data;
+        console.log('2. Сохраняем товары в модель каталога...');
+        catalog.setProducts(products);
+        console.log('3. Проверяем сохраненные данные:');
+        const savedProducts = catalog.getProducts();
+        console.log('Количество товаров в каталоге:', savedProducts.length);
+        console.log('Товары в каталоге:', savedProducts);
+        // Тестирование метода getProductById
+        console.log('4. Тестируем методы каталога с реальными данными:');
+        if (savedProducts.length > 0) {
+            const firstProduct = savedProducts[0];
+            console.log('Первый товар:', firstProduct);
+        // Тестируем получение товара по ID
+            const productByIdApi = catalog.getProductById(firstProduct.id);
+            console.log('Товар по ID:', productByIdApi);
+        // Тестируем работу с выбранным товаром
+            catalog.setSelectedProduct(firstProduct);
+            console.log('Выбранный товар:', catalog.getSelectedProduct());
+        }
+    })
+    .catch((error) => {
+        console.error('Ошибка работы с сервером: ', error);
+    });
 
