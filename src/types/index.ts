@@ -6,6 +6,7 @@ export interface IApi {
 }
 
 export type TPayment = 'online' | 'cash' | '';
+export type FormErrors = Partial<Record<keyof TOrder, string>>;
 
 // Интерфейс товара
 export interface IProduct {
@@ -49,3 +50,8 @@ export type TOrder = {
     items: string[]; // массив id товаров
     id?: string;
 }
+
+export interface ICardActions {
+    onClick?: (event: MouseEvent) => void;
+}
+

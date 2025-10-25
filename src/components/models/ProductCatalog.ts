@@ -1,12 +1,18 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class ProductCatalog {
-    private products: IProduct[] = [];
-    private selectedProduct: IProduct | null = null;
+    protected products: IProduct[] = [];
+    protected selectedProduct: IProduct | null = null;
+
+    constructor (
+        protected events: IEvents
+    ) {}
 
     // Сохранение массива товаров
     setProducts(products: IProduct[]): void {
         this.products = products;
+        this.events.emit('catalog:changed');
     }
 
     // Получение массива товаров
@@ -22,6 +28,7 @@ export class ProductCatalog {
     // Сохранение товара для подробного отображения
     setSelectedProduct(product: IProduct): void {
         this.selectedProduct = product;
+        this.events.emit('preview:changed', product);
     }
 
     // Получение товара для подробного отображения
@@ -32,5 +39,6 @@ export class ProductCatalog {
     // Очистка выбранного товара
     clearSelectedProduct(): void {
         this.selectedProduct = null;
+        this.events.emit('preview:changed');
     }
 }
