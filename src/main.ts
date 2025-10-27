@@ -8,15 +8,14 @@ import { Basket } from './components/view/Basket';
 import { CardBasket } from './components/view/CardBasket';
 import { CardCatalog } from './components/view/CardCatalog';
 import { CardPreview } from './components/view/CardPreview';
-import { ContactsForm, TContactsForm } from './components/view/ContactsForm';
-import { Form } from './components/view/Form';
+import { ContactsForm } from './components/view/ContactsForm';
 import { Gallery } from './components/view/Gallery';
 import { Header } from './components/view/Header';
 import { Modal } from './components/view/Modal';
-import { OrderForm, TOrderForm } from './components/view/OrderForm';
+import { OrderForm } from './components/view/OrderForm';
 import { Success } from './components/view/Success';
 import './scss/styles.scss';
-import { IBuyer, IProduct, TOrder, TPayment } from './types';
+import { IBuyer, IProduct } from './types';
 import { API_URL, settings } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
@@ -145,11 +144,13 @@ events.on('basket:delete', (item: IProduct) => {
 
 // реакция на клик на кнопку "Оформить" в корзине
 events.on('orderForm:open', () => {
+	const { payment, address } = buyer.validate().errors;
+	const isValid = !payment && !address;
 	modal.render({ content: orderForm.render({
-			payment: "",
-			address: "",
-			valid: "",
-			errors: [],
+			payment: buyer.getData().payment,
+			address: buyer.getData().address,
+			valid: isValid,
+			errors: '',
 		}),
 	});
 });
@@ -162,50 +163,48 @@ events.on('form:change', (data: { field: keyof IBuyer; value: string }) => {
 // реакция на сохранение данных
 events.on('buyer:change', ( data: { field: string} ) => {
 	const { payment, address, email, phone } = buyer.validate().errors;
-
-	console.log(buyer.validate());
 	
 	if (data.field === 'payment' || data.field === 'address' || !data) {
 		const isValid = !payment && !address;
 		const errors = Object.values({ payment, address })
 		.filter((i) => !!i)
 		.join('; ');
-		modal.render({ content: orderForm.render({
+		orderForm.render({
 			payment: buyer.getData().payment,
 			address: buyer.getData().address,
 			valid: isValid,
 			errors: errors,
-			}),
 		});
 	} else if (data.field === 'email' || data.field === 'phone' || !data) {
-		const isValid = !email && !address;
+		const isValid = !email && !phone;
 		const errors = Object.values({ email, phone })
 		.filter((i) => !!i)
 		.join('; ');
-		modal.render({ content: orderForm.render({
+		contactsForm.render({
 			email: buyer.getData().email,
 			phone: buyer.getData().phone,
 			valid: isValid,
 			errors: errors,
-			}),
 		});
 	}
 });
 
 // реакция на кнопку "Далее" в модальном окне первого шага оформления заказа
 events.on('order:submit', () => {
+	const { phone, email } = buyer.validate().errors;
+	const isValid = !email && !phone;
 	modal.render({
 		content: contactsForm.render({
-			phone: "",
-			email: "",
-			valid: false,
-			errors: [],
+			phone: buyer.getData().phone,
+			email: buyer.getData().email,
+			valid: isValid,
+			errors: '',
 		}),
 	});
 });
 
 // реакция на кнопку "Оплатить" в модальном окне второго шага оформления заказа
-events.on('contactsForm:submit', () => {
+events.on('contacts:submit', () => {
     const productsPost = {
         payment: buyer.getData().payment,
         email: buyer.getData().email,
@@ -214,12 +213,12 @@ events.on('contactsForm:submit', () => {
 		items: basketProducts.getItems().map((item) => item.id),
 		total: basketProducts.getTotalPrice(),
     }
-    console.log(productsPost.total);
-    console.log(productsPost.payment);
-    console.log(productsPost.email);
-    console.log(productsPost.phone);
-    console.log(productsPost.address);
-    console.log(productsPost.items);
+    // console.log(productsPost.total);
+    // console.log(productsPost.payment);
+    // console.log(productsPost.email);
+    // console.log(productsPost.phone);
+    // console.log(productsPost.address);
+    // console.log(productsPost.items);
 
 	apiClient
 		.submitOrder(productsPost)
@@ -244,37 +243,3 @@ apiClient
     .catch((err) => {
         console.error('Ошибка работы с сервером: ', err);
     });
-
-
-
-	// // реакция на выбор способа оплаты и ввод данных в формы
-// events.on('order:payment', (data: { payment: Partial<IBuyer> }) => {
-// 	buyer.setData(data.payment);
-// 	formData.payment = data.payment;
-// 	console.log(`оплата выбрана ${data.payment}`);
-// });
-
-// events.on('order:address', (data: { address: Partial<IBuyer> }) => {
-// 	buyer.setData(data.address);
-// 	console.log(`адрес заполнен ${data.address}`);
-// });
-
-// events.on('contacts:email', (data: { email: Partial<IBuyer> }) => {
-// 	buyer.setData(data.email);
-// 	console.log(`мыло заполнено ${data.email}`);
-// });
-
-// events.on('contacts:phone', (data: { phone: Partial<IBuyer> }) => {
-// 	buyer.setData(data.phone);
-// 	console.log(`телефон заполнен ${data.phone}`);
-// });
-
-// // реакция на изменение значений в модели данных покупателя
-// events.on('buyer:change', (data: { field: string}) => {
-// 	const payment = buyer.getData().payment;
-// 	const errors = buyer.validate();
-
-// 	if (data.field === 'payment' || data.field === 'address') {
-// 		const isValid = orderForm.
-// 	}
-// });

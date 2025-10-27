@@ -13,14 +13,16 @@ export abstract class Card<T> extends Component<T> {
     }
 
     set title(value: string) {
-        if (this.titleElement) {
-            this.titleElement.textContent = String(value);
-        }
+        this.titleElement.textContent = String(value);
     }
 
-    set price(value: number | null) {
-        if (this.priceElement) {
-            this.priceElement.textContent = `${value} синапсов`;
-        }
-    }
+    set price(value: number) {
+		let priceText = '';
+		if (!value) {
+			priceText = `Бесценно`;
+		} else {
+			priceText = `${value} синапсов`;
+		}
+		this.priceElement.textContent = priceText;
+	}
 }
