@@ -42,8 +42,8 @@ export class Basket extends Component<IBasket> {
 		};
 	}
 
-    toggleButton(state: boolean) {
-		this.setDisabled(this.basketButton, state);
+    protected toggleButton(state: boolean) {
+		this.basketButton.disabled = state;
 	}
 
     set total(value: number) {

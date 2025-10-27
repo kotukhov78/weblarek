@@ -1,5 +1,5 @@
 import { ICardActions, IProduct } from "../../types";
-import { categoryMap, CDN_URL, settings } from "../../utils/constants";
+import { categoryMap, CDN_URL } from "../../utils/constants";
 import { ensureElement } from "../../utils/utils";
 import { Card } from "./Card";
 
@@ -28,10 +28,6 @@ export class CardPreview extends Card<IProduct> {
 		}
     }
 
-    set id(value: string) {
-		this.container.dataset.id = value;
-	}
-
     set category(value: string) {
         this.categoryElement.textContent = value;
         for (const key in categoryMap) {
@@ -47,28 +43,11 @@ export class CardPreview extends Card<IProduct> {
         this.descriptionElement.textContent = String(value);
     }
 
-    set buttonText(value: string) {
-        this.buttonElement.textContent = String(value);
+    setButtonText(text: string): void {
+        this.buttonElement.textContent = text;
     }
 
-    set buttonDisabled(value: boolean) {
-        this.buttonElement.disabled = value;
+    setButtonDisabled(state: boolean): void {
+        this.buttonElement.disabled = state;
     }
-
-    changeButton(price: number, inBasket: boolean): void {
-		if (!price) {
-			this.setText(this.buttonElement, settings.buyButtonValues.disabled);
-			this.toggleButton(true);
-		} else {
-			if (inBasket) {
-				this.setText(this.buttonElement, settings.buyButtonValues.delete);
-			} else {
-				this.setText(this.buttonElement, settings.buyButtonValues.add);
-			}
-		}
-	}
-
-	toggleButton(state: boolean) {
-		this.setDisabled(this.buttonElement, state);
-	}
 }

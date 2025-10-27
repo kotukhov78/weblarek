@@ -46,7 +46,7 @@ export class Modal extends Component<TModal> {
         document.body.style.width = '100%';
 
         // активация модального окна
-		this.toggleClass(this.container, 'modal_active', true);
+		this.container.classList.toggle('modal_active', true);
 	}
 
 	close() {
@@ -60,7 +60,7 @@ export class Modal extends Component<TModal> {
         window.scrollTo(0, this.scrollPosition);
 
         // деактивация модального окна
-		this.toggleClass(this.container, 'modal_active', false);
+		this.container.classList.toggle('modal_active', false);
 	}
 
     set content(value: HTMLElement) {

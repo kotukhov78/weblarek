@@ -1,4 +1,4 @@
-import { IBuyer, TOrder } from "../../types";
+import { TOrder, TPayment } from "../../types";
 import { ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
 import { Form } from "./Form";
@@ -10,6 +10,7 @@ export type TOrderForm = Pick<TOrder, 'payment' | 'address'>;
 export class OrderForm extends Form<Partial<TOrderForm>> {
     protected paymentButtonCard: HTMLButtonElement;
     protected paymentButtonCash: HTMLButtonElement;
+	protected addressInput: HTMLInputElement;
 
     constructor(
         container: HTMLFormElement,
@@ -19,8 +20,9 @@ export class OrderForm extends Form<Partial<TOrderForm>> {
         
         this.paymentButtonCard = ensureElement<HTMLButtonElement>('button[name="card"]', this.container);
         this.paymentButtonCash = ensureElement<HTMLButtonElement>('button[name="cash"]', this.container);
+		this.addressInput = ensureElement<HTMLInputElement>('input[name="address"]', this.container);
         
-        this.paymentButtonCard.addEventListener('click', () => {
+		this.paymentButtonCard.addEventListener('click', () => {
 			this.toggleCard();
 		});
 
@@ -28,25 +30,8 @@ export class OrderForm extends Form<Partial<TOrderForm>> {
 			this.toggleCash();
 		});
 
-        this.container.addEventListener('input', (e: Event) => {
-			const target = e.target as HTMLInputElement;
-			const field = target.name as keyof TOrderForm;
-			const value = target.value;
-			this.onInputChange(field, value);
-		});
 
-		this.container.addEventListener('submit', (e: Event) => {
-			e.preventDefault();
-			this.events.emit('orderForm:submit');
-		});
     }
-
-    protected onInputChange(field: keyof IBuyer, value: string) {
-		this.events.emit('orderFormInput:change', {
-			field,
-			value,
-		});
-	}
 
     set address(value: string) {
 		(this.container.elements.namedItem('address') as HTMLInputElement).value = value;
