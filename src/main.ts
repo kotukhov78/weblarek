@@ -213,12 +213,12 @@ events.on('contacts:submit', () => {
 		items: basketProducts.getItems().map((item) => item.id),
 		total: basketProducts.getTotalPrice(),
     }
-    // console.log(productsPost.total);
-    // console.log(productsPost.payment);
-    // console.log(productsPost.email);
-    // console.log(productsPost.phone);
-    // console.log(productsPost.address);
-    // console.log(productsPost.items);
+    console.log(productsPost.total);
+    console.log(productsPost.payment);
+    console.log(productsPost.email);
+    console.log(productsPost.phone);
+    console.log(productsPost.address);
+    console.log(productsPost.items);
 
 	apiClient
 		.submitOrder(productsPost)

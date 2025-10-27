@@ -31,8 +31,12 @@ export class Buyer {
 
     // Очистка данных покупателя
     clearData(): void {
-        this.data = {};
-        this.events.emit('buyer:change');
+        this.data = {
+            payment: '',
+            email: '',
+            phone: '',
+            address: '',
+        };
     }
 
     // Валидация данных, введенных покупателем
